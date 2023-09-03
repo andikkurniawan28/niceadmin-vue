@@ -4,7 +4,7 @@
 
     const user = ref([]);
 
-    const fetch = async () => {
+    const callUser = async () => {
         await api.get('/api/user')
         .then(response => {
             user.value = response.data;
@@ -14,13 +14,14 @@
     const destroy = async (id) => {
         await api.delete(`/api/user/${id}`)
         .then(() => {
-            fetch();
+            callUser();
         })
     };
 
     onMounted(() => {
-        fetch();
+        callUser();
     });
+    
 </script>
 
 <template>
@@ -58,9 +59,9 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr v-for="(user, index) in user.data" :key="index">
+                                    <tr v-for="(user, index) in user.user" :key="index">
                                         <td>{{ user.id }}</td>
-                                        <td>{{ user.role_id }}</td>
+                                        <td>{{ user.role }}</td>
                                         <td>{{ user.name }}</td>
                                         <td>{{ user.username }}</td>
                                         <td class="text-center">

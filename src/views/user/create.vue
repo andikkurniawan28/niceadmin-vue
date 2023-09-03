@@ -1,15 +1,23 @@
 <script setup>
-    import { ref } from "vue";
+    import { ref, onMounted } from 'vue';
     import { useRouter } from 'vue-router';
     import api from "../../api";
 
     const router = useRouter();
 
+    const role      = ref("");
     const name      = ref("");
     const role_id   = ref("");
     const username  = ref("");
     const password  = ref("");
     const errors    = ref([]);
+
+    const callRole = async () => {
+        await api.get('/api/role')
+        .then(response => {
+            role.value = response.data;
+        });
+    }
 
     const store = async () => {
         let formData = new FormData();
@@ -25,6 +33,11 @@
             errors.value = error.response.data;
         });
     };
+
+    onMounted(() => {
+        callRole();
+    });
+
 </script>
 
 <template>
@@ -57,9 +70,11 @@
                                 </div>
                             </div>
                             <div class="row mb-3">
-                                <label for="role_id" class="col-sm-2 col-form-label">Role ID</label>
+                                <label for="role_id" class="col-sm-2 col-form-label">Role</label>
                                 <div class="col-sm-10">
-                                    <input type="number" class="form-control" id="role_id" v-model="role_id" required>
+                                    <select v-model="role_id" class="form-control">
+                                        <option v-for="role in role.role" :value="role.id">{{ role.name }}</option>
+                                    </select>
                                 </div>
                             </div>
                             <div class="row mb-3">
